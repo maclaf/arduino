@@ -14,22 +14,70 @@
  */
 
 
-// the setup function runs once when you press reset or power the board
-void setup() {
-  // initialize digital pin 13 as an output.
-  pinMode(12, OUTPUT);
-  pinMode(13, OUTPUT);
-}
+int stepperDelay;
+int k = 0;
 
+// tdhe setup function runs once when you press reset or power the board
+void setup() {
+
+  Serial.begin(9600);
+  while (!Serial) {
+    ;
+  }
+  Serial.println("ASCII Table ~ Character Map");
+  Serial.print(", dec: ");
+  // initialize digital pin 13 as an output.
+  pinMode(13, OUTPUT);
+  pinMode(12, OUTPUT);
+  pinMode(11, OUTPUT);
+  pinMode(10, OUTPUT);
+  pinMode(9, OUTPUT);
+  stepperDelay = 5;
+}
+int inByte = 0;
 // the loop function runs over and over again forever
 void loop() {
-  digitalWrite(13, HIGH);
-  delay(500);            
-  digitalWrite(12, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(500);             // wait for a second
-  digitalWrite(13, LOW);
-  delay(500);             // wait for a second
-  digitalWrite(12, LOW);    // turn the LED off by making the voltage LOW
+  if (Serial.available() > 0) {
+    inByte = Serial.read();
+    int steps = Serial.parseInt();
+    if (inByte == 'r') {
+      for (int i = 0; i < steps; i++) {
+        forward();
+      }
+    } else {
+      for (int i = 0; i < steps; i++) {
+        backward();
+      }
+    }
 
 
+
+
+    Serial.println(steps);
+
+  }
+  //  k=200;
+  //  for(int i = 0; i < k; i++){
+  //    forward();
+  //  }
+  //  for(int i = 0; i < k; i++){
+  //    backward();
+  //  }
+
+}
+void forward() {
+  for (int i = 0; i < 4; i++) {
+    digitalWrite(12 - i, HIGH); // turn the LED on (HIGH is the voltage level)
+    delay(stepperDelay);              // wait for a second
+    digitalWrite(12 - i, LOW);  // turn the LED off by making the voltage LOW
+    delay(stepperDelay);              // wait for a second
+  }
+}
+void backward() {
+  for (int i = 0; i < 4; i++) {
+    digitalWrite(9 + i, HIGH); // turn the LED on (HIGH is the voltage level)
+    delay(stepperDelay);              // wait for a second
+    digitalWrite(9 + i, LOW);  // turn the LED off by making the voltage LOW
+    delay(stepperDelay);              // wait for a second
+  }
 }
