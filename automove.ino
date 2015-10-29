@@ -8,7 +8,7 @@ void setup() {
   pinMode(11, OUTPUT);
   pinMode(10, OUTPUT);
   pinMode(9, OUTPUT);
-  stepperDelay = 10;
+  stepperDelay = 4;
 }
 int inByte = 0;
 
